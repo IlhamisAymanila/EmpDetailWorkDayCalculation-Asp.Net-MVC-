@@ -1,0 +1,23 @@
+﻿@model IEnumerable<PublicHolidays>
+<div class="card p-3 mb-4">
+    <h5>Public Holidays</h5>
+    <ul id="holidayList" class="list-group">
+        @if (Model.Any())
+        {
+            @foreach (var holiday in Model)
+            {
+                <li class="list-group-item d-flex align-items-center justify-content-start gap-2">
+                    <span>@holiday.HolidayDate.ToString("yyyy-MM-dd")</span>
+                    <span class="text-orange">- @holiday.Description</span>
+                </li>
+            }
+        }
+    </ul>
+</div>
+
+<style>
+    .text-orange {
+        color: orange;
+        font-weight: bold;
+    }
+</style>

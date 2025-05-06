@@ -1,0 +1,41 @@
+﻿<div class="container p-4">
+	<div class="row">
+		<div class="col">
+			<div class="card">
+
+				<div class="card-body">
+					<h5 class="card-title">Employee Managment</h5>
+					<p class="card-text">Create,Delete,Update,Deletion</p>
+					<button class="btn btn-primary" id="empManagBtnId"> Go</button>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card">
+
+				<div class="card-body">
+					<h5 class="card-title">Work day Managment</h5>
+					<p class="card-text">Add Holidays, Check Holidays</p>
+					<button class="btn btn-primary" id="wdBtnId"> Go</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+@section Scripts{
+	<script type="text/javascript">
+		$("#empManagBtnId").on("click", function(){
+			window.location.href = "@Url.Action("EmployeesHome", "Employees")";
+		});
+
+
+		$("#wdBtnId").on("click", function(){
+			window.location.href = "@Url.Action("HolidayPage", "Holliday")";
+		});
+	</script>
+}
+
+	
+	

@@ -1,0 +1,35 @@
+﻿@using EmpDetailWorkDayCalculation.ViewModels
+@model EmployeeViewModel
+
+<h1 class="mb-4">Employees Create</h1>
+
+<div class="row">
+    <div class="form-group">
+        <label class="form-label">Name</label>
+        <input class="form-control" type="text" id="nameId" placeholder="Employee Name" value="@Model.Name" />
+        <small class="text-danger d-none" id="nameError">Name is required.</small>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-control" type="text" id="emailId" placeholder="Employee Email" value="@Model.Email" />
+        <small class="text-danger d-none" id="emailError">Enter a valid email.</small>
+    </div>
+    <div class="form-group">
+        <label class="form-label">Job Position</label>
+        <input class="form-control" type="text" id="jobId" placeholder="Employee Job Position" value="@Model.JobPosition" />
+        <small class="text-danger d-none" id="jobError">Job position is required.</small>
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div class="form-group m-1">
+            <button class="btn btn-primary" id="updateBtn" onclick="update(@Model.Id)">Update</button>
+        </div>
+    }
+    else
+    {
+        <div class="form-group m-1">
+            <button class="btn btn-primary" id="createBtn" onclick="createEmp()">Create</button>
+        </div>
+    }
+
+</div>

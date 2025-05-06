@@ -1,0 +1,163 @@
+﻿<div class="container mt-4">
+    <h2 class="text-center">Working Days Calculator</h2>
+    <div id="createDate"></div>
+    <div id="listDate"></div>
+    <div id="calculateDate"></div>
+    <div id="workingDayResult"></div>
+</div>
+
+@section Scripts
+{
+    <script>
+        // Load external content into divs on page load
+        $(document).ready(function() {
+            $("#createDate").load("/Holliday/CreateDate");
+            $("#listDate").load("/Holliday/GetAllDate");
+            $("#calculateDate").load("/Holliday/CalculateDate");
+        });
+
+        // Function to add a new holiday date
+        function addDate() {
+            let isValid = true;
+            var holidayDate = $("#holidayDate").val();
+            var holidayDes = "";
+            // Reset previous errors
+            $("#dateError").addClass("d-none");
+            $("#holidayDate").removeClass("is-invalid");
+
+            // Check if the date is empty
+            if (holidayDate === "") {
+                $("#dateError").removeClass("d-none").text("Date is required.");
+                $("#holidayDate").addClass("is-invalid");
+                isValid = false;
+            } else {
+                // Check if the date is in the past
+                var currentDate = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+                if (holidayDate < currentDate) {
+                    $("#dateError").removeClass("d-none").text("Date cannot be in the past.");
+                    $("#holidayDate").addClass("is-invalid");
+                    isValid = false;
+                }
+            }
+
+            if ($("#holidayDescription").val().trim() === "") {
+                        $("#holidayDescriptionError").removeClass("d-none");
+                        $("#holidayDescription").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#holidayDescriptionError").addClass("d-none");
+                        $("#holidayDescription").removeClass("is-invalid");
+
+                             holidayDes = $("#holidayDescription").val();
+                    }
+
+           
+
+            // If validation passed, proceed with AJAX call
+            if (isValid) {
+                $.ajax({
+                    url: '/Holliday/InsertDate',
+                    type: 'POST',
+                    data: { newDate: holidayDate, holidayDescription: holidayDes },
+                    success: function(response) {
+                        if (response.isOk) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Clear the input and refresh the list of dates
+                                    $("#holidayDate").val("");
+                                    $("#holidayDescription").val("");
+                                    $("#listDate").load("/Holliday/GetAllDate");
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: response.message,
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error: ', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing your request.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        }
+
+        function CalculateDays(){
+            let isValid = true;
+
+            var startDate = "";
+            var endDate = "";
+
+
+            if ($("#startDate").val().trim() === "") {
+                        $("#startDateError").removeClass("d-none");
+                        $("#startDate").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#startDateError").addClass("d-none");
+                        $("#startDate").removeClass("is-invalid");
+
+                             startDate = $("#startDate").val();
+                    }
+             if ($("#endDate").val().trim() === "") {
+                        $("#endDateError").removeClass("d-none");
+                        $("#endDate").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#endDateError").addClass("d-none");
+                        $("#endDate").removeClass("is-invalid");
+
+                             endDate = $("#endDate").val();
+                    }
+
+            if(isValid){
+                 $.ajax({
+                    url: '/Holliday/CalculateHoliday',
+                    type: 'POST',
+                    data: { startDate: startDate, endDate: endDate },
+                    success: function(response) {
+                        if (!response.isOk) {
+                             Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: response.message,
+                                confirmButtonText: 'OK'
+                            });
+                            
+                               
+                        }
+                        $("#workingDayResult").html(response);
+                    },
+                    error: function(error) {
+                        console.error('Error: ', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing your request.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+
+
+        }
+    </script>
+}
+
+
+

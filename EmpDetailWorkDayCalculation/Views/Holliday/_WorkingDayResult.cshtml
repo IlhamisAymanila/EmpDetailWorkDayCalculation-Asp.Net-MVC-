@@ -1,0 +1,45 @@
+﻿@using EmpDetailWorkDayCalculation.DTO
+@model WorkingDaysResultDto
+
+<div class="card p-3 mb-4">
+    <h5>Working Days Results</h5>
+ 
+    
+        
+            <div class="mb-3">
+                <h6>Total Working Days: @Model.TotalWorkingDays</h6>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Day of Week</th>
+                            <th>Weekend</th>
+                            <th>Public Holiday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(Model.DayDetails.Any()){
+                            @foreach (var day in Model.DayDetails)
+                            {
+                                <tr>
+                                    <td>@day.Date.ToString("yyyy-MM-dd")</td>
+                                    <td>@day.DayOfWeek</td>
+                                    <td>@(day.IsWeekend ? "Yes" : "No")</td>
+                                    <td>@(day.IsPublicHoliday ? "Yes" : "No")</td>
+                                </tr>
+                            }
+                        }
+                        
+                    </tbody>
+                </table>
+            </div>
+        
+    
+   
+</div>
+
+<style>
+    .table th, .table td {
+        text-align: center;
+    }
+</style>

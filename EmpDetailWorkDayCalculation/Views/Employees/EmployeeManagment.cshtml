@@ -1,0 +1,282 @@
+﻿
+
+<div class="card">
+    <div class="card-body">
+        <div id="empCreateorUpdate">
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div id="empList">
+        </div>
+
+    </div>
+</div>
+
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function () {
+                     $("#empList").load("/Employees/GetAllEmployee");
+                     $("#empCreateorUpdate").load("/Employees/EmployeeManagmnet");
+
+
+
+
+        });
+
+        // create employee
+            function createEmp() {
+                   
+
+                    let isValid = true;
+
+                    var empName = "";
+                    var empEmail = "";
+                    var jobDF = "";
+
+                    // Name validation
+                    if ($("#nameId").val().trim() === "") {
+                        $("#nameError").removeClass("d-none");
+                        $("#nameId").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#nameError").addClass("d-none");
+                        $("#nameId").removeClass("is-invalid");
+
+                             empName = $("#nameId").val();
+                    }
+
+                    // Email validation
+                     var emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailPattern.test($("#emailId").val().trim())) {
+                        $("#emailError").removeClass("d-none");
+                        $("#emailId").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#emailError").addClass("d-none");
+                        $("#emailId").removeClass("is-invalid");
+
+                            empEmail = $("#emailId").val();
+                    }
+
+                    // Job Position validation
+                    if ($("#jobId").val().trim() === "") {
+                        $("#jobError").removeClass("d-none");
+                        $("#jobId").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#jobError").addClass("d-none");
+                        $("#jobId").removeClass("is-invalid");
+
+                                jobDF = $("#jobId").val();
+                    }
+                    // console.log(empName,empEmail,jobDF);
+                    // If valid, submit the form
+                    if (isValid) {
+
+                            $.ajax({
+                            url: "@Url.Action("CreateEmployee", "Employees")",
+                            type: 'POST',
+                            data: { name: empName , email: empEmail, jobD:jobDF},
+                            success: function (response) {
+                                if (response.isOk) {
+                                        Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: response.message,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // window.location.href = '/LocationAmendment/LocationAmendment/Index';
+                                                $("#nameId").val("");
+                                                $("#jobId").val("");
+                                                $("#emailId").val("");
+
+                                                      $("#empList").load("/Employees/GetAllEmployee");
+                                        }
+                                    });
+
+
+
+
+                                }else{
+                                           Swal.fire({
+                                           icon: 'warning',
+                                           title: 'warning',
+                                            text: response.message,
+                                            confirmButtonText: 'OK'
+                                        });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error: ' + error);
+                            }
+                        });
+                    }
+                };
+
+                //update employee
+                  function update(id){
+
+                    let isValid = true;
+
+                    var empName = "";
+                    var empEmail = "";
+                    var jobDF = "";
+
+                    // Name validation
+                    if ($("#nameId").val().trim() === "") {
+                        $("#nameError").removeClass("d-none");
+                        $("#nameId").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#nameError").addClass("d-none");
+                        $("#nameId").removeClass("is-invalid");
+
+                             empName = $("#nameId").val();
+                    }
+
+                    // Email validation
+                     var emailPattern = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailPattern.test($("#emailId").val().trim())) {
+                        $("#emailError").removeClass("d-none");
+                        $("#emailId").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#emailError").addClass("d-none");
+                        $("#emailId").removeClass("is-invalid");
+
+                            empEmail = $("#emailId").val();
+                    }
+
+                    // Job Position validation
+                    if ($("#jobId").val().trim() === "") {
+                        $("#jobError").removeClass("d-none");
+                        $("#jobId").addClass("is-invalid");
+                        isValid = false;
+                    } else {
+                        $("#jobError").addClass("d-none");
+                        $("#jobId").removeClass("is-invalid");
+
+                                jobDF = $("#jobId").val();
+                    }
+                    // console.log(empName,empEmail,jobDF);
+                    // If valid, submit the form
+                    if (isValid) {
+
+                            $.ajax({
+                            url: "@Url.Action("UpdateEmpDetail", "Employees")",
+                            type: 'POST',
+                            data: { name: empName , email: empEmail, jobD:jobDF, id: id},
+                            success: function (response) {
+                                if (response.isOk) {
+                                        Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: response.message,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // window.location.href = '/LocationAmendment/LocationAmendment/Index';
+                                                $("#nameId").val("");
+                                                $("#jobId").val("");
+                                                $("#emailId").val("");
+
+                                                      $("#empList").load("/Employees/GetAllEmployee");
+                                                      $("#empCreateorUpdate").load("/Employees/EmployeeManagmnet");
+                                        }
+                                    });
+
+
+
+
+                                }else{
+                                           Swal.fire({
+                                           icon: 'warning',
+                                           title: 'warning',
+                                            text: response.message,
+                                            confirmButtonText: 'OK'
+                                        });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error: ' + error);
+                            }
+                        });
+                    }
+                };
+
+
+             // Employee Delete
+           function deleteEmployee(id) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Warning',
+                text: 'Are you sure you want to delete this employee?',
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Employees/DeleteEmployee/' + id,
+                        method: 'POST',
+                        success: function (response) {
+                            if (response.isOk) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: response.message,
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message || 'Failed to delete employee.',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong. Please try again.',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    Swal.fire('Employee not deleted', '', 'info');
+                }
+            });
+        }
+
+
+              //Employee update
+                  function editEmployee(id){
+                                    //$.post('/Employees/EmployeeManagmnet/' + id);
+                                //window.location.href = '/Employees/EmployeeManagmnet/' + id;
+                           $.ajax({
+                            url: '/Employees/EmployeeManagmnet/'+id,
+                            type: 'POST',
+                            success: function (response) {
+
+
+                                     $("#empCreateorUpdate").html(response);
+
+
+                            }
+                        });
+
+
+
+                  }
+
+    </script>
+}
